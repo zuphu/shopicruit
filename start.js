@@ -22,7 +22,7 @@ function fetchProducts(callback) {
     });
 }
 
-function extractAndConvertPrice(callback) {
+function extractAndConvertPriceToKg(callback) {
     console.log("sorting products");
     // console.log(computerAndKeyboardProducts.length);
     computerAndKeyboardProducts.forEach(function(data) {
@@ -65,8 +65,7 @@ function logEverything(callback) {
 function selectItems(callback) {
     var weight = 0;
     var weightIndex = 0;
-    
-    
+
     while (weight <= 100) {
         if (weightIndex == variantWeight.length)
             weightIndex = 0;
@@ -81,7 +80,7 @@ function selectItems(callback) {
             weightIndex = 0;
         }
         else {
-            console.log('too much weight with variant', variantWeight[weightIndex])
+            console.log('Too much weight with variant', variantWeight[weightIndex])
             break;
         }
     }
@@ -90,6 +89,7 @@ function selectItems(callback) {
 
 function calculateTotalWeight(callback) {
     var totalWeight = 0;
+
     for (var x in selectedItems)
         totalWeight += selectedItems[x];
     console.log('Total weight:', totalWeight);
@@ -98,7 +98,7 @@ function calculateTotalWeight(callback) {
 
 async.waterfall([
     fetchProducts,
-    extractAndConvertPrice,
+    extractAndConvertPriceToKg,
     sortProductByWeight,
     selectItems,
     calculateTotalWeight,
