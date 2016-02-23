@@ -73,14 +73,14 @@ function selectItems(callback) {
         if ((variantWeight[weightIndex] + weight) <= 100) {
             selectedItems.push(variantWeight[weightIndex]);
             weight += variantWeight[weightIndex];
-            console.log('adding weight', variantWeight[weightIndex])
+            //console.log('adding weight', variantWeight[weightIndex])
             weightIndex++;
         }
         else if ((variantWeight[0] + weight) <= 100) {
             weightIndex = 0;
         }
         else {
-            console.log('Too much weight with variant', variantWeight[weightIndex])
+            //console.log('Too much weight with variant', variantWeight[weightIndex])
             break;
         }
     }
@@ -96,16 +96,35 @@ function calculateTotalWeight(callback) {
     callback(null);
 }
 
+function calculateTotalPrice(callback) {
+  var totalPrice = 0;
+    for (var x in selectedItems) {
+      var result = productVariantAndPrice.filter(function(obj) {
+          return obj.weight === selectedItems[x];
+      });
+      if (result[0]) {
+        console.log('PARSE PARSE PARSE PARSE', parseFloat(result[0].price));
+        totalPrice += parseFloat(result[0].price);
+      }
+
+      console.log(selectedItems[x]);
+      console.log(JSON.stringify(result[0]));
+    }
+
+    console.log(totalPrice, totalPrice);
+
+    callback(null);
+}
+
 async.waterfall([
     fetchProducts,
     extractAndConvertPriceToKg,
     sortProductByWeight,
     selectItems,
     calculateTotalWeight,
+    calculateTotalPrice,
     function(callback) {
         console.log("finished processing");
         callback(null);
     }
-]);
-
-
+]); 
