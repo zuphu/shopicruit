@@ -1,10 +1,10 @@
 // Render HTML with a receipt for an order
 function receipt(order) {
-    var p = 'Payment info: ';
+  var p = 'Payment info: ';
     
-    if (!order || !order.payment_type) {
-        return; // Return if undefined to prevent runtime errors 
-    }
+  if (!order || !order.payment_type) {
+    return; // Return if undefined to prevent runtime errors 
+  }
 
   if (order.payment_type == "creditcard") { // changed conditional equality to assignment operator
     p += order.payment.getCardType + " " + order.payment.card_number; //card type(VISA/MasterCard etc.) and number)
