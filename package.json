@@ -1,0 +1,27 @@
+{
+  "name": "shopicruit",
+  "version": "1.0.0",
+  "description": "Shopify recruit program",
+  "main": "shopicruit.js",
+  "dependencies": {
+    "async": "^1.5.2",
+    "jquery": "^2.2.0",
+    "lodash": "^4.1.0",
+    "request": "^2.69.0",
+    "request-json": "^0.5.5"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "node shopicruit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zuphu/shopicruit.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zuphu/shopicruit/issues"
+  },
+  "homepage": "https://github.com/zuphu/shopicruit"
+}

@@ -10,8 +10,8 @@ the maximum number of items that can be carried with a maximum weight of
 /* Libraries */
 var async = require('async');
 var request = require('request-json');
-var _ = require('lodash');
 var client = request.createClient('http://shopicruit.myshopify.com');
+
 var computerAndKeyboardProducts = [];
 var productVariantAndPrice = [];
 var variantWeight = [];
