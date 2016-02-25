@@ -10,17 +10,17 @@ function receipt(order) {
 
   if (order.payment_type === "creditcard" && order.payment.getCardType &&
       order.payment.card_number) {
-    p = order.payment.getCardType + " " + order.payment.card_number; //card type(VISA/MasterCard etc.) and number)
+    p += order.payment.getCardType + " " + order.payment.card_number; //card type(VISA/MasterCard etc.) and number)
   } else if (order.payment_type === "paypal" && order.payment.paypal_info) {
-    p = order.payment.paypal_info;
+    p += order.payment.paypal_info;
   } else if (order.payment_type === "manual" && order.payment.manual_payment_info) {
-    p = order.payment.manual_payment_info;
+    p += order.payment.manual_payment_info;
   } else if (order.payment_type === "free") {
-    p = "This order was free!"; //Free order or promotional item
+    p += "This order was free!"; //Free order or promotional item
   } else if (order.payment.default_payment_info) {
-    p = order.payment.default_payment_info;//default order info
+    p += order.payment.default_payment_info;//default order info
   } else {
-    p = 'Order type is invalid.'
+    p += 'Order type is invalid.'
     document.write(p);
     return;
   }
