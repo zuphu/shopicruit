@@ -1,3 +1,13 @@
+/******************************************
+Author: 	Anthony Guevara
+Date: 		February 24, 2016
+Purpose: 	Retrieve a list of items from shopifies shopicruit store. Parse
+			the JSON data to retrieve Keyboard and Computer items. Calculate
+the maximum number of items that can be carried with a maximum weight of
+100Kg and display the answer in dollars. 
+******************************************/
+
+/* Libraries */
 var async = require('async');
 var request = require('request-json');
 var _ = require('lodash');
@@ -7,8 +17,12 @@ var productVariantAndPrice = [];
 var variantWeight = [];
 var selectedItems = [];
 
+/*
+	Use request library to make async call to fetch all products from URL:
+	http://shopicruit.myshopify.com/products.json
+	Filter all products that are of type Computer and Keyboard.
+*/
 function fetchProducts(callback) {
-    console.log("fetching products");
     client.get('products.json', function(err, res, body) {
         if (err) throw err();
 
@@ -22,16 +36,15 @@ function fetchProducts(callback) {
     });
 }
 
+/*
+	Iterate through all items and convert grams to Kg and store specific
+	variant data in local array productVariantAndPrice.
+*/
 function extractAndConvertPriceToKg(callback) {
-    console.log("sorting products");
-    // console.log(computerAndKeyboardProducts.length);
     computerAndKeyboardProducts.forEach(function(data) {
-        // console.log(data.title, "=============");
         data.variants.forEach(function(variant){
-            // console.log(variant);
-            variantWeight.push(//title: data.title, 
-                // price: variant.price, 
-                (variant.grams/1000) //convert grams to kg
+            variantWeight.push(
+                (variant.grams/1000) //convert grams to Kg
             );
             productVariantAndPrice.push({
                 title: data.title,
@@ -41,27 +54,22 @@ function extractAndConvertPriceToKg(callback) {
             });
         })
     });
+
     callback(null);
 }
 
+/*
+	Sort all products by weight in Kg from low to high.
+*/
 function sortProductByWeight(callback) {
     variantWeight.sort(function(a, b){return a-b});
+
     callback(null);
 }
 
-function logEverything(callback) {
-    console.log(productVariantAndPrice);
-    console.log(variantWeight);
-
-    var x = _.filter(productVariantAndPrice, function(data){
-        return data.price == 18.76;
-    });
-
-    console.log("WTF BBQ");
-    console.log(x);
-    callback(null);
-}
-
+/*
+	Add select item variants until 100Kg is achieved or less.
+*/
 function selectItems(callback) {
     var weight = 0;
     var weightIndex = 0;
@@ -73,55 +81,64 @@ function selectItems(callback) {
         if ((variantWeight[weightIndex] + weight) <= 100) {
             selectedItems.push(variantWeight[weightIndex]);
             weight += variantWeight[weightIndex];
-            //console.log('adding weight', variantWeight[weightIndex])
             weightIndex++;
         }
         else if ((variantWeight[0] + weight) <= 100) {
             weightIndex = 0;
         }
         else {
-            //console.log('Too much weight with variant', variantWeight[weightIndex])
             break;
         }
     }
+
     callback(null);
 }
 
-function calculateTotalWeight(callback) {
+/*
+	Total weight of all selected items.
+*/
+function calculateAndDisplayTotalWeight(callback) {
     var totalWeight = 0;
 
-    for (var x in selectedItems)
-        totalWeight += selectedItems[x];
+    for (var i in selectedItems)
+        totalWeight += selectedItems[i];
     console.log('Total weight:', totalWeight);
+
     callback(null);
 }
 
+/*
+	Total price of all selected items.
+*/
 function calculateTotalPrice(callback) {
   var totalPrice = 0;
-    for (var x in selectedItems) {
+    for (var i in selectedItems) {
       var result = productVariantAndPrice.filter(function(obj) {
-          return obj.weight === selectedItems[x];
+          return obj.weight === selectedItems[i];
       });
       if (result[0]) {
-        console.log('PARSE PARSE PARSE PARSE', parseFloat(result[0].price));
         totalPrice += parseFloat(result[0].price);
       }
 
-      console.log(selectedItems[x]);
+      console.log(selectedItems[i]);
       console.log(JSON.stringify(result[0]));
     }
 
-    console.log(totalPrice, totalPrice);
+    console.log('The total price:', totalPrice);
 
     callback(null);
 }
 
+/*
+	Use async waterfall to ensure functions are called in order because
+	fetchProducts() is an async call when retrieving the list of products.
+*/
 async.waterfall([
     fetchProducts,
     extractAndConvertPriceToKg,
     sortProductByWeight,
     selectItems,
-    calculateTotalWeight,
+    calculateAndDisplayTotalWeight,
     calculateTotalPrice,
     function(callback) {
         console.log("finished processing");
